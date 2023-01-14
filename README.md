@@ -128,7 +128,7 @@ com.shuishu.demo.ltree.entity.Tree ：数据库PO实体（节点实体）
 - 创建数据库
 - 启用扩展插件 Ltree
 - 创建表，ss_tree，注意其中的字段 `tree_path` 类型是 `ltree`
-- 建立两种索引 `GIST` 和 'btree'
+- 建立两种索引 `GIST` 和 `btree`
 
 ```sql
 -- 数据库启用扩展 LTree
@@ -187,7 +187,7 @@ INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_p
 # 工具类构建树形结构
 
 ## 工具类构建树形结构
-工具类构建的树形结构有一个要求是，传递进去的Tree集合数据，在查询的时候，必须是按照TreePath进行过升序操作的，否则工具构建出的数据将是错误的数据。
+工具类构建的树形结构有一个要求是，传递进去的Tree集合数据，在查询的时候，必须是按照`TreePath`进行过升序操作的，否则工具构建出的数据将是错误的数据。
 工具类`TreeBuilder`作为`Bean`注入，
 实例如下：接口 `/path`
 
