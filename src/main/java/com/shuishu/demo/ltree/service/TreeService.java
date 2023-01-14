@@ -52,8 +52,9 @@ public interface TreeService {
      * 将树向上移动一级
      *
      * @param pathToMove 移动的节点路径
+     * @param currentOrAll true：所有  false：当前
      */
-    void moveTreeOneLevelUp(String pathToMove);
+    void moveTreeOneLevelUp(String pathToMove, Boolean currentOrAll);
 
     /**
      * 移动根节点向下
@@ -76,7 +77,8 @@ public interface TreeService {
      *
      * @param destinationPath 节点
      * @param sourcePath 节点
+     * @param currentOrAll  true：所有  false：当前
      */
-    void copyTree(String destinationPath, String sourcePath);
+    void copyTree(String destinationPath, String sourcePath, Boolean currentOrAll);
 
 }

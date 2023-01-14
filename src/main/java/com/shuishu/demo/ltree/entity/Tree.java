@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "ss_tree")
 @Comment(value = "用户表")
-public class Tree implements Comparable<Tree>{
+public class Tree{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Comment(value = "tree id")
@@ -61,7 +61,6 @@ public class Tree implements Comparable<Tree>{
     @Comment("树形结构，当前节点全路径path")
     private LTree treePath;
 
-
     public Tree(Long treeId, String treeName, String treeDesc, Integer treeSort, String treeCode, LTree treePath) {
         this.treeId = treeId;
         this.treeName = treeName;
@@ -69,16 +68,6 @@ public class Tree implements Comparable<Tree>{
         this.treeSort = treeSort;
         this.treeCode = treeCode;
         this.treePath = treePath;
-    }
-
-    @Override
-    public int compareTo(Tree other) {
-        if (treeSort > other.treeSort) {
-            return 1;
-        } else if (treeSort < other.treeSort) {
-            return -1;
-        }
-        return 0;
     }
 
 }

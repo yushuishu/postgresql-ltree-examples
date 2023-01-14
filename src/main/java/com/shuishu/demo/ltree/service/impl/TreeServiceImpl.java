@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ：谁书-ss
@@ -39,33 +39,45 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public void addTree(String parentTreeCode, String newTreeCode) {
-        if (!StringUtils.hasText(parentTreeCode) || !StringUtils.hasText(newTreeCode)){
-            throw new RuntimeException("父节点和新增节点都不能为空");
+        if (!StringUtils.hasText(newTreeCode)){
+            throw new RuntimeException("新增节点不能为空");
         }
-        if (newTreeCode.contains(StrUtil.DOT)){
-            throw new RuntimeException("新增节点不能包含英文点（.）");
-        }
-        // 验证是否已添加过
         Tree tempTree = treeRepository.findTreeByTreeCode(newTreeCode);
         if (tempTree != null){
             throw new RuntimeException("节点已添加");
         }
-        // 查询最后一级是parentTreeName 的全路径：*.parentTreeName
-        String fullPath = treeRepository.findFullPathByLastPath(parentTreeCode);
-        if (!StringUtils.hasText(fullPath)){
-            throw new RuntimeException("父节点不存在");
+        if (newTreeCode.contains(StrUtil.DOT)){
+            throw new RuntimeException("新增节点不能包含英文点（.）");
         }
-        String newTreePath = fullPath + "." + newTreeCode;
-        // 查询父节点的子节点有多少了(排序号)
-        long count = treeRepository.findCurrentChildrenNodeCountByTreeCode(parentTreeCode);
 
         Tree tree = new Tree();
-        tree.setTreeName(newTreeCode + "名称");
-        tree.setTreeDesc(newTreeCode + "描述");
-        tree.setTreeSort((int) (count + 1L));
-        tree.setTreeCode(newTreeCode);
-        tree.setTreePath(new LTree(newTreePath));
-        treeRepository.save(tree);
+
+        if (StringUtils.hasText(parentTreeCode)){
+            // 查询父节点全路径
+            String fullPath = treeRepository.findFullPathByCode(parentTreeCode);
+            if (!StringUtils.hasText(fullPath)){
+                throw new RuntimeException("父节点不存在");
+            }
+            String newTreePath = fullPath + "." + newTreeCode;
+            // 查询父节点的子节点有多少了(排序号)
+            long count = treeRepository.findCurrentChildrenNodeCountByTreeCode(parentTreeCode);
+            tree.setTreeName(newTreeCode + "名称");
+            tree.setTreeDesc(newTreeCode + "描述");
+            tree.setTreeSort((int) (count + 1L));
+            tree.setTreeCode(newTreeCode);
+            tree.setTreePath(new LTree(newTreePath));
+        }else {
+            // 添加的节点是根节点
+            // 排序号处理：查询所有根节点数量
+            long rootNodeCount = treeRepository.findTreeCountByTreePathLevel(1);
+            tree.setTreeName(newTreeCode + "名称");
+            tree.setTreeDesc(newTreeCode + "描述");
+            tree.setTreeSort((int) (rootNodeCount + 1L));
+            tree.setTreeCode(newTreeCode);
+            tree.setTreePath(new LTree(newTreeCode));
+        }
+        List<Tree> all = treeRepository.findAll();
+        treeRepository.addTree((long) (all.size() + 1), tree.getTreeName(), tree.getTreeDesc(), tree.getTreeSort(), tree.getTreeCode(), tree.getTreePath().getValue());
     }
 
     @Override
@@ -84,8 +96,17 @@ public class TreeServiceImpl implements TreeService {
             List<TreeNode> childrenList = treeNodeList.get(0).getChildren();
             if (!ObjectUtils.isEmpty(childrenList)){
                 // 获取删除节点的父节点
-                String parentTreePath = treePath.substring(0, treePath.lastIndexOf(StrUtil.DOT));
-
+                String parentTreePath = treePath.substring(0, treePath.lastIndexOf(StrUtil.DOT) + 1);
+                String currentNodeCode = treePath.substring(treePath.lastIndexOf(StrUtil.DOT) + 1);
+                // 修改子节点的treePath
+                childrenList.forEach(t -> {
+                    String childrenTreePath = t.getTreePath();
+                    t.setTreePath(parentTreePath  + childrenTreePath.substring(childrenTreePath.lastIndexOf(t.getTreeCode()) + 1));
+                });
+                List<TreeNode> collect = childrenList.stream().sorted(Comparator.comparing(TreeNode::getTreeSort)).toList();
+                for (int i = 0; i < collect.size(); i++) {
+                    treeRepository.updateTreePath(collect.get(i).getTreeId(), i + 1, collect.get(i).getTreePath());
+                }
             }
             treeRepository.deleteCurrentTree(treePath);
         }
@@ -104,8 +125,14 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public void moveTreeOneLevelUp(String pathToMove) {
-        treeRepository.moveTreeOneLevelUp(pathToMove);
+    public void moveTreeOneLevelUp(String pathToMove, Boolean currentOrAll) {
+        if (currentOrAll){
+            // 包括所有子节点都进行移动操作
+            treeRepository.moveTreeOneLevelUp2(pathToMove);
+        }else {
+            // 只移动当前节点，所有的子孙节点的层级将向上移动一级
+            treeRepository.moveTreeOneLevelUp(pathToMove);
+        }
     }
 
     @Override
@@ -119,7 +146,12 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public void copyTree(String destinationPath, String sourcePath) {
-        treeRepository.copyTree(destinationPath, sourcePath);
+    public void copyTree(String destinationPath, String sourcePath, Boolean currentOrAll) {
+        if (currentOrAll){
+            // 拷贝当前节点，包括所有子孙节点
+        }else {
+            // 只拷贝当前层级节点
+            treeRepository.copyTree(destinationPath, sourcePath);
+        }
     }
 }

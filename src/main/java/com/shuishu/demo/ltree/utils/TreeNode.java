@@ -1,16 +1,9 @@
 package com.shuishu.demo.ltree.utils;
 
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import com.shuishu.demo.ltree.entity.LTree;
-import jakarta.annotation.Nonnull;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.Comment;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author ：谁书-ss
@@ -68,33 +61,4 @@ public class TreeNode {
         return null;
     }
 
-
-    //Optional<TreeNode> firstNodeHavingValue(String valueToFind){
-    //    if (this.treeCode.equals(valueToFind)){
-    //        return Optional.of(this);
-    //    }
-    //    return this.children.stream()
-    //            .filter(treeNode -> treeNode.treeCode.equals(valueToFind))
-    //            .findFirst();
-    //}
-
-    public List<TreeNode> renderAsJson() {
-        List<TreeNode> nodeList = new ArrayList<>();
-        TreeNode treeNode = new TreeNode();
-        treeNode.setTreeId(this.treeId);
-        treeNode.setTreeName(this.treeName);
-        treeNode.setTreeDesc(this.treeDesc);
-        treeNode.setTreeSort(this.treeSort);
-        treeNode.setTreeCode(this.treeCode);
-        treeNode.setTreePath(this.treePath);
-        nodeList.add(treeNode);
-        return nodeList;
-    }
-
-    //private String renderChildrenAsJson() {
-    //    return this.children
-    //            .stream()
-    //            .map(TreeNode::renderAsJson)
-    //            .collect(Collectors.joining(","));
-    //}
 }

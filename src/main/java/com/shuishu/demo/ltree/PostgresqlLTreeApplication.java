@@ -2,6 +2,7 @@ package com.shuishu.demo.ltree;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 /**
@@ -26,20 +27,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * GitHub参考（构建树）：{@link <a href="https://github.com/zhoujiaping/path-test">...</a>}
  * Blog参考（）：{@link <a href="https://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/">...</a>}
  * Stackoverflow（SQL查询json）：{@link <a href="https://stackoverflow.com/questions/26995326/postgresql-materialized-path-ltree-to-hierarchical-json-object">...</a>}
- *
- * <p></p>
- * -------------------------- 补充额外知识：
- * jdk1.8   IntStream.range(int startInclusive, int endExclusive)
- * jdk1.9   新语法 ifPresentOrElse() 方法
- * 注解 @Embeddable {@link jakarta.persistence.Embeddable}
- * 注解 @Embedded   {@link jakarta.persistence.Embedded}
- *
  * <p></p>
  * 参考以上网站各位大佬的思路和源码，加以总结和优化，结合实际业务场景，编写此用例。
  */
+@EnableJpaRepositories
 @SpringBootApplication
 public class PostgresqlLTreeApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(PostgresqlLTreeApplication.class, args);
     }
