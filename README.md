@@ -43,7 +43,7 @@ Tree 数据设计方案比较
 
 `ltree` 是俄罗斯Teodor Sigaev和Oleg Bartunov共同开发的PostgreSQL contrib扩展模块，它包含数据类型的实现、为树状结构组织的数据提供索引和查询。
 
-`ltree` 使用到了两种索引为 `GIST` 和 'btree'
+`ltree` 使用到了两种索引为 `GIST` 和 `btree`
 
 关于GIST索引的一些介绍：https://developer.aliyun.com/article/68244
 
