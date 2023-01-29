@@ -26,27 +26,10 @@ public interface TreeService {
     /**
      * 删除节点
      *
-     * @param treePath 删除节点路径
-     * @param currentOrAll true：所有， false：当前
+     * @param treeCode 删除节点code
+     * @param includedChild true：包含， false：不包含
      */
-    void deleteTree(String treePath, Boolean currentOrAll);
-
-    /**
-     * 单个路径条件查询
-     *
-     * @param treePath 条件路径
-     * @return 树结构
-     */
-    List<TreeNode> findAllBySingleCondition(String treePath);
-
-    /**
-     * 多个路径条件查询
-     *
-     * @param treePath  条件路径1
-     * @param treePath2 条件路径2
-     * @return -树结构
-     */
-    List<TreeNode> findAllByMultipleCondition(String treePath, String treePath2);
+    void deleteTree(String treeCode, Boolean includedChild);
 
     /**
      * 将树向上移动一级

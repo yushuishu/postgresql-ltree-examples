@@ -46,13 +46,14 @@ public interface TreeRepository extends BaseRepository<Tree, Long> {
     /**
      * 查询当前节点下子节点的数量，第一级子节点，不包含孙子节点
      *
-     * @param parentTreeCode 当前节点
+     * @param parentTreeCode 当前节点：'*.parentTreeCode.*{1}'
      * @return 子节点数量
      */
-    @Query(value = "SELECT tree_path FROM ss_tree WHERE tree_path ~ CAST('*.?0.*{1}' AS ltree);", nativeQuery = true)
+    @Query(value = "SELECT COUNT(tree_path) FROM ss_tree WHERE tree_path ~ CAST(:parentTreeCode AS lquery);", nativeQuery = true)
     long findCurrentChildrenNodeCountByTreeCode(@Param("parentTreeCode") String parentTreeCode);
 
-    /**查询 tree 数量，通过层级
+    /**
+     * 查询 tree 数量，通过层级
      *
      * @param level 层级
      * @return 当前层级 tree 数量
@@ -72,6 +73,30 @@ public interface TreeRepository extends BaseRepository<Tree, Long> {
     @Modifying
     @Query(value = "INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (:treeId, :treeName, :treeDesc, :treeSort, :treeCode, CAST(:treePath AS ltree))", nativeQuery = true)
     void addTree(@Param("treeId") Long treeId, @Param("treeName") String treeName, @Param("treeDesc") String treeDesc, @Param("treeSort") Integer treeSort, @Param("treeCode") String treeCode, @Param("treePath") String treePath);
+
+    /**
+     * 查询兄弟节点
+     *
+     * @param treePath 当前节点 path
+     * @return 所有兄弟节点，包含自己
+     */
+    @Query(value = """
+            SELECT
+            	*
+            FROM
+            	ss_tree
+            WHERE
+            	tree_path ~ CAST (
+            	(
+            	SELECT
+            	CASE
+            		WHEN
+            			subltree ( CAST (:treePath AS ltree ), 0, nlevel ( CAST ( :treePath AS ltree ) ) - 1 ) = '' THEN
+            				CONCAT('*{1}') ELSE CONCAT ( subltree ( CAST ( :treePath AS ltree ), 0, nlevel ( CAST ( :treePath AS ltree ) ) - 1 ), '.*{1}' )
+            				END) AS lquery
+            		);
+            """, nativeQuery = true)
+    List<Tree> findBrotherNodeByTreePath(@Param("treePath") String treePath);
 
     /**
      * 删除当前节点 和 所有子孙节点
@@ -99,8 +124,8 @@ public interface TreeRepository extends BaseRepository<Tree, Long> {
      * @param treePath 搜索路径
      * @return 所有
      */
-    @Query(value = "SELECT * FROM ss_tree WHERE tree_path <@ CAST(:treePath AS ltree) OR tree_path <@ CAST(:treePath2 AS ltree) ORDER BY tree_path", nativeQuery = true)
-    List<Tree> findAllByTreePath(@Param("treePath") String treePath, @Param("treePath2") String treePath2);
+    @Query(value = "SELECT * FROM ss_tree WHERE tree_path <@ CAST(:treePath AS ltree) ORDER BY tree_path", nativeQuery = true)
+    List<Tree> findIncludedChildByTreePath(@Param("treePath") String treePath);
 
     /**
      * 更新节点 path
@@ -159,5 +184,4 @@ public interface TreeRepository extends BaseRepository<Tree, Long> {
     @Modifying
     @Query(value = "INSERT INTO ss_tree (tree_name, tree_path) (SELECT tree_name, CAST(:destinationPath AS ltree) || subpath(tree_path, 1) FROM ss_tree WHERE CAST(:sourcePath AS ltree) @> path)", nativeQuery = true)
     void copyTree(@Param("destinationPath") String destinationPath, @Param("sourcePath") String sourcePath);
-
 }

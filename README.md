@@ -168,17 +168,15 @@ INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_p
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (6, 'F名称', 'F描述', 3, 'F', 'A.B.F');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (7, 'G名称', 'G描述', 1, 'G', 'A.B.F.G');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (8, 'H名称', 'H描述', 4, 'H', 'A.B.H');
-INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (9, 'I名称', 'I描述', 1, 'I', 'I');
+INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (9, 'I名称', 'I描述', 2, 'I', 'I');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (10, 'J名称', 'J描述', 1, 'J', 'I.J');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (11, 'K名称', 'K描述', 1, 'K', 'I.J.K');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (12, 'L名称', 'L描述', 2, 'L', 'I.J.L');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (13, 'M名称', 'M描述', 2, 'M', 'I.M');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (14, 'N名称', 'N描述', 1, 'N', 'I.M.N');
-INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (15, 'O名称', 'O描述', 1, 'O', 'I.M.O');
+INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (15, 'O名称', 'O描述', 2, 'O', 'I.M.O');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (16, 'P名称', 'P描述', 1, 'P', 'I.M.O.P');
 INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (17, 'Q名称', 'Q描述', 2, 'Q', 'I.M.O.Q');
-INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (18, 'R名称', 'R描述', 3, 'R', 'I.M.O.R');
-INSERT INTO ss_tree (tree_id, tree_name, tree_desc, tree_sort, tree_code, tree_path) VALUES (19, 'S名称', 'S描述', 4, 'S', 'I.M.O.S');
 ```
 
 

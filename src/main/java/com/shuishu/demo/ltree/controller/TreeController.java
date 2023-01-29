@@ -2,14 +2,12 @@ package com.shuishu.demo.ltree.controller;
 
 
 import com.shuishu.demo.ltree.service.TreeService;
-import com.shuishu.demo.ltree.utils.TreeNode;
 import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 /**
  * @author ：谁书-ss
@@ -26,12 +24,15 @@ public class TreeController {
     private TreeService treeService;
 
     /**
-     * http://localhost:8080/api/shuishu/demo/tree/add?parentTreeCode=S&newTreeCode=X
-     * http://localhost:8080/api/shuishu/demo/tree/add?parentTreeCode=&newTreeCode=Y
+     * 新节点 X <a href="http://localhost:8080/api/shuishu/demo/tree/add?parentTreeCode=&newTreeCode=X">...</a>
+     * 父节点 X 新节点 Y <a href="http://localhost:8080/api/shuishu/demo/tree/add?parentTreeCode=X&newTreeCode=Y">...</a>
+     * 父节点 Y 新节点 Z <a href="http://localhost:8080/api/shuishu/demo/tree/add?parentTreeCode=Y&newTreeCode=Z">...</a>
+     * 父节点 X 新节点 T <a href="http://localhost:8080/api/shuishu/demo/tree/add?parentTreeCode=X&newTreeCode=T">...</a>
+     * 父节点 Z 新节点 S <a href="http://localhost:8080/api/shuishu/demo/tree/add?parentTreeCode=Z&newTreeCode=S">...</a>
      *
-     * @param parentTreeCode
-     * @param newTreeCode
-     * @return
+     * @param parentTreeCode 父节点 code
+     * @param newTreeCode 新节点 code
+     * @return -
      */
     @GetMapping("add")
     public ResponseEntity<?> addTree(String parentTreeCode, String newTreeCode){
@@ -40,39 +41,19 @@ public class TreeController {
     }
 
     /**
-     * http://localhost:8080/api/shuishu/demo/tree/delete?treePath=&currentOrAll=false
+     * deleteTree 删除接口
+     * addTree 添加接口，增加了5条节点数据：X、Y、Z、T、S，测试删除节点。（第一次测试完毕，重新添加数据）
+     * 第一次测试，treeCode = Y  includedChild = true    <a href="http://localhost:8080/api/shuishu/demo/tree/delete?treeCode=Y&includedChild=true">...</a>
+     * 第二次测试，treeCode = X  includedChild = false   <a href="http://localhost:8080/api/shuishu/demo/tree/delete?treeCode=X&includedChild=false">...</a>
      *
-     * @param treePath
-     * @param currentOrAll
-     * @return
+     * @param treeCode 删除节点code
+     * @param includedChild true：包含， false：不包含（所有子孙节点向上一级移动）
+     * @return -
      */
     @GetMapping("delete")
-    public ResponseEntity<?> deleteTree(String treePath, Boolean currentOrAll){
-        treeService.deleteTree(treePath, currentOrAll);
+    public ResponseEntity<?> deleteTree(String treeCode, Boolean includedChild){
+        treeService.deleteTree(treeCode, includedChild);
         return ResponseEntity.ok("删除节点成功");
-    }
-
-    /**
-     * http://localhost:8080/api/shuishu/demo/tree/path?treePath=
-     *
-     * @param treePath
-     * @return
-     */
-    @GetMapping("/path")
-    public ResponseEntity<List<TreeNode>> findAllBySingleCondition(String treePath) {
-        return ResponseEntity.ok(treeService.findAllBySingleCondition(treePath));
-    }
-
-    /**
-     * http://localhost:8080/api/shuishu/demo/tree/more/path?treePath=&treePath2=
-     *
-     * @param treePath
-     * @param treePath2
-     * @return
-     */
-    @GetMapping("more/path")
-    public ResponseEntity<List<TreeNode>> findAllByMultipleCondition(String treePath, String treePath2) {
-        return ResponseEntity.ok(treeService.findAllByMultipleCondition(treePath, treePath2));
     }
 
     /**
@@ -127,5 +108,4 @@ public class TreeController {
         treeService.copyTree(destinationPath, sourcePath, currentOrAll);
         return ResponseEntity.ok("复制节点到指定节点");
     }
-
 }
