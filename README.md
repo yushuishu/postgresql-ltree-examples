@@ -24,7 +24,7 @@ Blog参考（语法）：https://www.cnblogs.com/nickchou/p/9391904.html
 
 GitHub参考（构建树）：https://github.com/zhoujiaping/path-test
 
-Blog参考（）：https://mikehillyer.com/articles/managing-hierarchical-data-in-mysql
+Blog参考（嵌套集模型）：https://mikehillyer.com/articles/managing-hierarchical-data-in-mysql
 
 Stackoverflow（SQL查询json）：https://stackoverflow.com/questions/26995326/postgresql-materialized-path-ltree-to-hierarchical-json-object
 
